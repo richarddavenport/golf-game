@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const db = window.firebase.firestore();
+import { db } from './firebase';
 
 export function useDocument(collectionPath, docId, initialValue) {
   const [value, setValue] = useState(initialValue);

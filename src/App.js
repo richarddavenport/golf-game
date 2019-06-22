@@ -1,19 +1,22 @@
 import React from 'react';
-import './App.css';
-import { useDocument, useCollection } from './useSnapshotChange';
 import Player from './Player';
+import SignIn from './SignIn';
+import withCollection from './withCollection';
+import withDocument from './withDocument';
+// import AddUser from './AddUser';
 
-function App() {
-  const tournament = useDocument('tournaments', '034_2019-06-20', null);
-  const users = useCollection('tournaments/034_2019-06-20/users', null);
-
+function App({ doc: tournament, collection: users }) {
   return (
     <div>
+      <SignIn />
       {tournament &&
         users &&
         users.map(user => <Player key={user.userName} blob={tournament.blob} user={user} />)}
+      {/* <AddUser /> */}
     </div>
   );
 }
 
-export default App;
+const Tournament = withDocument('tournaments', '034_2019-06-20')(App);
+const Users = withCollection('tournaments/034_2019-06-20/users')(Tournament);
+export default Users;

@@ -13,9 +13,9 @@ const Player = ({ blob, user }) => {
 
   return (
     <div>
-      <h1>{user.userName}</h1>
-      <p>Total Score: {totalScore()}</p>
-      <p>Team </p>
+      <h1>
+        {user.userName} {totalScore()}
+      </h1>
       <TeamTable players={players} />
     </div>
   );
