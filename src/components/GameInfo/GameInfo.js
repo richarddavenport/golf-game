@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDocument } from '../useDocument/useDocument';
 import UserInfo from '../UserInfo/UserInfo';
-import withAuth from '../withAuth/withAuth';
+import withUser from '../withUser/withUser';
 
 const GameInfo = ({ game, user }) => {
   const tournament = useDocument(`tournaments/${game.data.tournamentId}`);
@@ -35,4 +35,4 @@ const GameInfo = ({ game, user }) => {
   );
 };
 
-export default withAuth(GameInfo);
+export default withUser(GameInfo);

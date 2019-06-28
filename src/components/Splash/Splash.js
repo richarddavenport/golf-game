@@ -1,5 +1,5 @@
 import React from 'react';
-import withUser from '../withAuth/withAuth';
+import withUser from '../withUser/withUser';
 import './Splash.css';
 import SignIn from '../SignIn/SignIn';
 

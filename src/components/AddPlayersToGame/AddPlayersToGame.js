@@ -4,16 +4,18 @@ import PlayersDropDown from '../PlayersDropDown/PlayersDropDown';
 
 const AddPlayersToGame = ({ game, user }) => {
   const [state, setState] = useState({
-    players: ['', '', '', '']
+    players: []
   });
 
   const tournament = useDocument(`tournaments/${game.data.tournamentId}`);
 
+  if (tournament === undefined) return null;
+
   const handlePlayer = index => event => {
-    setState({
-      ...state,
-      players: state.players.map((player, i) => (i === index ? event.target.value : player))
-    });
+    const players = [...state.players];
+    players[index] = event.target.value;
+
+    setState({ players });
   };
 
   const handleSubmit = event => {
@@ -31,13 +33,13 @@ const AddPlayersToGame = ({ game, user }) => {
   };
 
   const buildDropDown = index => (
-    <div>
+    <div style={{ margin: 10 }}>
       <label>
         Golfer {index + 1}:
         <PlayersDropDown
           value={state.players[index]}
           onChange={handlePlayer(index)}
-          players={tournament.leaderboard}
+          players={tournament.leaderboard.players}
         />
       </label>
     </div>
@@ -49,7 +51,7 @@ const AddPlayersToGame = ({ game, user }) => {
       {buildDropDown(1)}
       {buildDropDown(2)}
       {buildDropDown(3)}
-      <input type="submit" value="Submit" />
+      <input type="submit" value="Submit" disabled={state.players.length < 3} />
     </form>
   );
 };

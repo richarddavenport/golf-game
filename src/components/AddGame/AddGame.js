@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { db } from '../../api/firebase';
 import withCollectionWithIds from '../withCollectionWithIds/withCollectionWithIds';
-import withUser from '../withAuth/withAuth';
+import withUser from '../withUser/withUser';
 
 function AddGame({ collection: tournaments, user }) {
   const [state, setState] = useState({

@@ -15,7 +15,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '../../api/firebase';
-import withUser from '../withAuth/withAuth';
+import withUser from '../withUser/withUser';
 
 const useStyles = makeStyles(theme => ({
   root: {
