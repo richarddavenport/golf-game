@@ -121,10 +121,36 @@ export interface Leaderboard {
     tournament_name: string;
 }
 
-export interface LeaderboardData {
+export interface LeaderboardResponse {
     debug: Debug;
     last_updated: Date;
     time_stamp: string;
     leaderboard: Leaderboard;
 }
 
+// @ts-ignore
+interface Firestore {
+    // root
+    tournaments: Tournament[];
+    users: User[];
+    games: Game[];
+}
+
+interface Tournament {
+    id: string;
+    leaderboard: Leaderboard;
+}
+interface User {
+    auth: any;
+    games: string[];
+}
+interface Game {
+    tournamentId: string;
+    name: string;
+    users: GameUsers;
+}
+interface GameUsers {
+    userId: string;
+    players: Player[];
+    score: any;
+}

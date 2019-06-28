@@ -4,13 +4,22 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.1.1",
+    "@material-ui/icons": "^4.2.0",
+    "@types/jest": "^24.0.15",
+    "@types/lodash": "^4.14.135",
+    "@types/node": "^12.0.10",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-router-dom": "^4.3.4",
     "firebase": "^6.2.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-firebaseui": "^3.1.2",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "rxfire": "^3.6.2",
-    "rxjs": "^6.5.2"
+    "rxjs": "^6.5.2",
+    "typescript": "^3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",

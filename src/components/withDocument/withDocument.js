@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDocument } from './hooks';
+import { useDocument } from '../useDocument/useDocument';
 
 function withDocument(collectionPath, docId) {
   return WrappedComponent => props => {
