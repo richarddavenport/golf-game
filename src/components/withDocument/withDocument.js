@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDocument } from '../useDocument/useDocument';
 
-function withDocument(collectionPath, docId) {
+function withDocument(documentPath, docId) {
   return WrappedComponent => props => {
-    const doc = useDocument(collectionPath, docId, null);
+    const doc = useDocument(documentPath, docId, null);
     return <WrappedComponent doc={doc} {...props} />;
   };
 }

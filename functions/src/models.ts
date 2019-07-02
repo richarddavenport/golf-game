@@ -1,3 +1,5 @@
+import * as firebase from 'firebase';
+
 export interface Debug {
     current_round_in_setup: number;
     format_in_schedule_file_name: string;
@@ -129,28 +131,34 @@ export interface LeaderboardResponse {
 }
 
 // @ts-ignore
-interface Firestore {
-    // root
-    tournaments: Tournament[];
-    users: User[];
+export interface Firestore {
+    tournaments: LeaderboardResponse[];
+    users: firebase.User[];
     games: Game[];
 }
 
-interface Tournament {
-    id: string;
-    leaderboard: Leaderboard;
-}
-interface User {
-    auth: any;
-    games: string[];
-}
-interface Game {
+export interface Game {
+    gameName: string;
+    rules: Rules;
+    scoreboard: Scorecard[];
+    tourName: string;
     tournamentId: string;
-    name: string;
-    users: GameUsers;
+    tournamentIsFinished: boolean;
+    tournamentIsStarted: boolean;
+    tournamentName: string;
+    tournamentRoundState: string;
+    users: {
+        [key: string]: firebase.User
+    };
 }
-interface GameUsers {
-    userId: string;
-    players: Player[];
-    score: any;
+
+export interface Rules {
+    pickSamePlayers: boolean;
+    top25once: boolean;
+}
+
+export interface Scorecard {
+    team: Player[];
+    uid: string;
+    score: number;
 }

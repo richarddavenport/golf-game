@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.4",
     "firebase": "^6.2.2",
+    "lodash": "^4.17.11",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-firebaseui": "^3.1.2",
@@ -27,7 +28,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "npm run build && firebase deploy",
-    "deploy:hosting": "npm run build && firebase deploy --only hosting"
+    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "eslintConfig": {
     "extends": "react-app"

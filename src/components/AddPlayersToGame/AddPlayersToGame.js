@@ -39,7 +39,7 @@ const AddPlayersToGame = ({ game, user }) => {
         <PlayersDropDown
           value={state.players[index]}
           onChange={handlePlayer(index)}
-          players={tournament.leaderboard.players}
+          players={tournament.leaderboard.players} // TODO: should come from game players
         />
       </label>
     </div>

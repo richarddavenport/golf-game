@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TeamTable = ({ players }) => (
+const TeamTable = ({ team }) => (
   <table>
     <thead>
       <tr>
@@ -12,12 +12,16 @@ const TeamTable = ({ players }) => (
       </tr>
     </thead>
     <tbody>
-      {players.map(player => (
+      {team.map(player => (
         <tr key={player.player_id}>
           <td>
             {player.player_bio.first_name} {player.player_bio.last_name}
           </td>
-          <td>{player.thru}</td>
+          <td>
+            {player.thru}
+            {player.status === 'cut' && <span style={{ fontStyle: 'italic' }}>cut</span>}
+            {player.status === 'wd' && <span style={{ fontStyle: 'italic' }}>withdrew</span>}
+          </td>
           <td>{player.current_position}</td>
           <td>{player.today}</td>
           <td>{player.total}</td>

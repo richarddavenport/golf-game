@@ -1,37 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDocument } from '../useDocument/useDocument';
-import UserInfo from '../UserInfo/UserInfo';
 import withUser from '../withUser/withUser';
 
 const GameInfo = ({ game, user }) => {
-  const tournament = useDocument(`tournaments/${game.data.tournamentId}`);
-
   if (user === undefined) return null;
 
-  const onJoinGame = () => {
-    game.ref.update({
-      users: [...game.data.users, user.uid]
-    });
-  };
+  const { gameName, tournamentName, scoreboard, users } = game.data;
 
   return (
-    <div style={{ marginBottom: 40 }}>
+    <>
       <Link to={`games/${game.id}`}>
         <h3>
-          {game.data.gameName} - {tournament && tournament.leaderboard.tournament_name}
+          {gameName} - {tournamentName}
         </h3>
       </Link>
       <p>Current Players</p>
       <ul>
-        {game.data.users.map(uid => (
-          <li key={uid}>
-            <UserInfo uid={uid} />
-          </li>
+        {scoreboard.map(scorecard => (
+          <li key={scorecard.uid}>{users[scorecard.uid].displayName}</li>
         ))}
       </ul>
-      {!game.data.users.includes(user.uid) && <button onClick={onJoinGame}>Join Game</button>}
-    </div>
+      {/* {!users.includes(user.uid) && <button onClick={onJoinGame}>Join Game</button>} */}
+      {/* TODO fix join game button */}
+    </>
   );
 };
 

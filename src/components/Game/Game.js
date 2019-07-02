@@ -1,36 +1,32 @@
 import React from 'react';
-import Player from '../Player/Player';
-import { useDocument } from '../useDocument/useDocument';
+// import AddPlayersToGame from '../AddPlayersToGame/AddPlayersToGame';
+import Document from '../Document/Document';
 import withUser from '../withUser/withUser';
-import AddPlayersToGame from '../AddPlayersToGame/AddPlayersToGame';
+import Scoreboard from '../Scoreboard/Scoreboard';
 
-function Game({ game, user }) {
-  const { data } = game;
-  const tournament = useDocument(`tournaments/${game.data.tournamentId}`);
-
-  if (tournament === undefined || user === undefined) return null;
-
-  const playersSelected = data.players.some(userPlayer => userPlayer.uid === user.uid);
+function Game({ gameId, user }) {
+  if (user === undefined) return null;
 
   return (
-    <>
-      {!playersSelected && (
-        <div>
-          <p>Pick your team!</p>
-          <AddPlayersToGame game={game} user={user} />
-        </div>
-      )}
-      <div>
-        {data.users.map(uid => (
-          <Player
-            key={uid}
-            uid={uid}
-            tournament={tournament}
-            players={data.players.filter(player => player.uid === uid)}
-          />
-        ))}
-      </div>
-    </>
+    <Document
+      documentPath={`games/${gameId}`}
+      document={game => {
+        // const playersSelected = game.scoreboard.some(scorecard => scorecard.user.uid === user.uid);
+        return (
+          <>
+            {/* {!playersSelected && (
+              <div>
+                <p>Pick your team!</p>
+                <AddPlayersToGame game={game} user={user} />
+              </div>
+            )} */}
+            <div>
+              <Scoreboard game={game} />
+            </div>
+          </>
+        );
+      }}
+    />
   );
 }
 
