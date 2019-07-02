@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { db } from '../../api/firebase';
 
-export interface DocWithId {
+export interface DocWithId<T> {
   id: string;
-  data: firebase.firestore.DocumentData;
+  data: T;
   ref: firebase.firestore.DocumentReference;
 }
 
-export function useCollectionWithIds(path: string) {
+export function useCollectionWithIds<T>(path: string) {
   const [value, setValue] = useState();
 
   useEffect(() => {
     const unsubscribe = db.collection(path).onSnapshot(docs => {
-      let data: DocWithId[] = [];
-      docs.forEach(doc => data.push({ id: doc.id, data: doc.data(), ref: doc.ref }));
+      let data: DocWithId<T>[] = [];
+      docs.forEach(doc => data.push({ id: doc.id, data: doc.data() as T, ref: doc.ref }));
       setValue(data);
     });
     return () => unsubscribe();
