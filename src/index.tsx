@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './components/App/App';
 import { BrowserRouter } from 'react-router-dom';
-import * as serviceWorker from './serviceWorker';
+import App from './App';
 import Splash from './components/Splash/Splash';
+import UserProvider from './components/withUserProvider/withUserProvider';
+import './index.css';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <BrowserRouter>
-    <Splash>
-      <App />
-    </Splash>
+    <UserProvider>
+      <Splash>
+        <App />
+      </Splash>
+    </UserProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

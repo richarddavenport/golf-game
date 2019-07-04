@@ -1,9 +1,9 @@
 import React from 'react';
-import withCollectionWithIds from '../withCollectionWithIds/withCollectionWithIds';
+import withCollectionWithIds from '../../components/withCollectionWithIds/withCollectionWithIds';
 import { Game } from '../../../functions/src/models';
 import { Link } from 'react-router-dom';
-import { DocWithId } from '../useCollectionWithIds/useCollectionWithIds';
-import withUser from '../withUser/withUser';
+import { DocWithId } from '../../components/useCollectionWithIds/useCollectionWithIds';
+import withUser from '../../components/withUser/withUser';
 
 interface GamesProps {
   collection: DocWithId<Game>[];
@@ -18,7 +18,7 @@ const Games: React.FunctionComponent<GamesProps> = ({ collection: games, user })
       <h1>Current Games: </h1>
       {games.map(game => {
         const { gameName, tournamentName, tournamentIsFinished, scoreboard, users } = game.data;
-        return !tournamentIsFinished &&
+        return tournamentIsFinished &&
           <div key={game.id} style={{ marginBottom: 40 }}>
             <Link to={`games/${game.id}`}>
               <h3>
@@ -31,9 +31,9 @@ const Games: React.FunctionComponent<GamesProps> = ({ collection: games, user })
                 <li key={scorecard.uid}>{users[scorecard.uid].displayName}</li>
               ))}
             </ul>
+            {/* {!users.includes(user.uid) && <button onClick={onJoinGame}>Join Game</button>} */}
+            {/* TODO fix join game button */}
           </div>
-        {/* {!users.includes(user.uid) && <button onClick={onJoinGame}>Join Game</button>} */ }
-        {/* TODO fix join game button */ }
       })}
     </>
   );

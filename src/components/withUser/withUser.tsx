@@ -1,23 +1,12 @@
-import isEqual from 'lodash/isEqual';
-import React, { useEffect, useState } from 'react';
-import { authState } from 'rxfire/auth';
-import { auth } from '../../api/firebase';
+import React from 'react';
+import { UserContext } from '../withUserProvider/withUserProvider';
 
-function withUser(WrappedComponent: any) {
+const withUser = (Component: any) => {
   return (props: any) => {
-    const [state, setState] = useState();
-
-    useEffect(() => {
-      const sub = authState(auth).subscribe(user => {
-        if (!isEqual(user, state)) {
-          setState(user);
-        }
-      });
-      return () => sub.unsubscribe();
-    });
-
-    return <WrappedComponent user={state} {...props} />;
+    return (
+      <UserContext.Consumer>{user => <Component {...props} user={user} />}</UserContext.Consumer>
+    );
   };
-}
+};
 
 export default withUser;

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useDocument } from '../useDocument/useDocument';
 import PlayersDropDown from '../PlayersDropDown/PlayersDropDown';
+import PickTeam from '../PickTeam/PickTeam';
 
 const AddPlayersToGame = ({ game, user }) => {
   const [state, setState] = useState({
     players: []
   });
 
-  const tournament = useDocument(`tournaments/${game.data.tournamentId}`);
+  const tournament = useDocument(`tournaments/${game.tournamentId}`);
 
   if (tournament === undefined) return null;
 
@@ -21,15 +22,16 @@ const AddPlayersToGame = ({ game, user }) => {
   const handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-    game.ref.update({
-      players: [
-        ...(game.data.players || []),
-        ...state.players.map(player => ({
-          uid: user.uid,
-          playerId: player
-        }))
-      ]
-    });
+    console.log(state);
+    // game.ref.update({
+    //   players: [
+    //     ...(game.data.players || []),
+    //     ...state.players.map(player => ({
+    //       uid: user.uid,
+    //       playerId: player
+    //     }))
+    //   ]
+    // });
   };
 
   const buildDropDown = index => (
@@ -47,6 +49,7 @@ const AddPlayersToGame = ({ game, user }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <PickTeam />
       {buildDropDown(0)}
       {buildDropDown(1)}
       {buildDropDown(2)}

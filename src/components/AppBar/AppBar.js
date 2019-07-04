@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import GroupAdd from '@material-ui/icons/GroupAdd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '../../api/firebase';
@@ -75,6 +76,14 @@ const AppBar = ({ user }) => {
           </IconButton>
         </div>
         <Divider />
+        <List>
+          <ListItem button to="/new-game" component={Link} onClick={handleDrawerClose}>
+            <ListItemIcon>
+              <GroupAdd />
+            </ListItemIcon>
+            <ListItemText primary="New Game" />
+          </ListItem>
+        </List>
         <List>
           <ListItem button to="/games" component={Link} onClick={handleDrawerClose}>
             <ListItemIcon>

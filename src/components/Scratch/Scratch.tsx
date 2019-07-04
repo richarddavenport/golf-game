@@ -1,5 +1,5 @@
 import React from 'react';
-import { db } from '../../api/firebase';
+// import { db } from '../../api/firebase';
 import { useDocument } from '../useDocument/useDocument';
 import { Game } from '../../../functions/src/models';
 
