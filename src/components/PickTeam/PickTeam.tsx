@@ -1,12 +1,12 @@
 import React from 'react';
 // import clsx from 'clsx';
 // import PropTypes from 'prop-types';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { /* lighten, */ makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
+// import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 // import Toolbar from '@material-ui/core/Toolbar';
@@ -15,11 +15,11 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 // import IconButton from '@material-ui/core/IconButton';
 // import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Switch from '@material-ui/core/Switch';
 // import DeleteIcon from '@material-ui/icons/Delete';
 // import FilterListIcon from '@material-ui/icons/FilterList';
-import { Player } from '../../../functions/src/models';
+import { GamePlayer } from '../../../functions/src/models';
 
 // function createData(name: any, calories: any, fat: any, carbs: any, protein: any) {
 //   return { name, calories, fat, carbs, protein };
@@ -68,11 +68,11 @@ function getSorting(order: string, orderBy: string) {
 }
 
 const headRows = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
+  { id: 'name', numeric: false, disablePadding: true, label: 'Player' }
+  // { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
+  // { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
+  // { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
+  // { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
 ];
 
 function EnhancedTableHead(props: {
@@ -92,12 +92,12 @@ function EnhancedTableHead(props: {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'Select all desserts' }}
-          />
+          /> */}
         </TableCell>
         {headRows.map(row => (
           <TableCell
@@ -129,31 +129,31 @@ function EnhancedTableHead(props: {
 //   rowCount: PropTypes.number.isRequired
 // };
 
-const useToolbarStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1)
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
-        },
-  spacer: {
-    flex: '1 1 100%'
-  },
-  actions: {
-    color: theme.palette.text.secondary
-  },
-  title: {
-    flex: '0 0 auto'
-  }
-}));
+// const useToolbarStyles = makeStyles(theme => ({
+//   root: {
+//     paddingLeft: theme.spacing(2),
+//     paddingRight: theme.spacing(1)
+//   },
+//   highlight:
+//     theme.palette.type === 'light'
+//       ? {
+//           color: theme.palette.secondary.main,
+//           backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+//         }
+//       : {
+//           color: theme.palette.text.primary,
+//           backgroundColor: theme.palette.secondary.dark
+//         },
+//   spacer: {
+//     flex: '1 1 100%'
+//   },
+//   actions: {
+//     color: theme.palette.text.secondary
+//   },
+//   title: {
+//     flex: '0 0 auto'
+//   }
+// }));
 
 // const EnhancedTableToolbar = (props: { numSelected: any }) => {
 //   const classes = useToolbarStyles();
@@ -213,14 +213,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function PickTeam({ players: Player[]}) {
+interface PickTeamProps {
+  gamePlayers: GamePlayer[];
+  setPlayers: any;
+}
+
+const PickTeam: React.FunctionComponent<PickTeamProps> = ({ gamePlayers, setPlayers }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // const [page, setPage] = React.useState(0);
+  // const [dense, setDense] = React.useState(false);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function handleRequestSort(event: any, property: React.SetStateAction<string>) {
     const isDesc = orderBy === property && order === 'desc';
@@ -230,7 +235,7 @@ export default function PickTeam({ players: Player[]}) {
 
   function handleSelectAllClick(event: { target: { checked: any } }) {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
+      const newSelecteds = gamePlayers.map(player => player.player_id);
       // @ts-ignore
       setSelected(newSelecteds);
       return;
@@ -257,87 +262,89 @@ export default function PickTeam({ players: Player[]}) {
     }
     // @ts-ignore
     setSelected(newSelected);
+    setPlayers(newSelected);
   }
 
-  function handleChangePage(event: any, newPage: React.SetStateAction<number>) {
-    setPage(newPage);
-  }
+  // function handleChangePage(event: any, newPage: React.SetStateAction<number>) {
+  //   setPage(newPage);
+  // }
 
-  function handleChangeRowsPerPage(event: { target: { value: string | number } }) {
-    setRowsPerPage(+event.target.value);
-  }
+  // function handleChangeRowsPerPage(event: { target: { value: string | number } }) {
+  //   setRowsPerPage(+event.target.value);
+  // }
 
-  function handleChangeDense(event: { target: { checked: React.SetStateAction<boolean> } }) {
-    setDense(event.target.checked);
-  }
+  // function handleChangeDense(event: { target: { checked: React.SetStateAction<boolean> } }) {
+  //   setDense(event.target.checked);
+  // }
   // @ts-ignore
   const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows = rowsPerPage - Math.min(rowsPerPage, players.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <div className={classes.tableWrapper}>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
+          <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={gamePlayers.length}
             />
             <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+              {stableSort(gamePlayers, getSorting(order, orderBy))
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row: GamePlayer, index) => {
+                  const isItemSelected = isSelected(row.player_id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event =>
+                        selected.length < 4 || (selected.length === 4 && isItemSelected)
+                          ? handleClick(event, row.player_id)
+                          : () => {}
+                      }
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.player_id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          disabled={selected.length > 3}
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
+                        {row.player_bio.last_name}, {row.player_bio.first_name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
+                      {/* <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="right">{row.protein}</TableCell> */}
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </div>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={players.length}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{
@@ -348,12 +355,14 @@ export default function PickTeam({ players: Player[]}) {
           }}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </div>
   );
-}
+};
+
+export default PickTeam;

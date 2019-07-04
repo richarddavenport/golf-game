@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from './components/AppBar/AppBar';
 import Scratch from './components/Scratch/Scratch';
 import Game from './pages/Game/Game';
+import AddGame from './pages/AddGame/AddGame';
 import Games from './pages/Games/Games';
 import Team from './pages/Team/Team';
 
@@ -13,6 +14,7 @@ export default () => (
       <Route path="/games" exact component={Games} />
       <Route path="/games/:gameId" component={Game} />
       <Route path="/team/:gameId" exact component={Team} />
+      <Route path="/create-game" component={AddGame} />
       <Route path="/scratch" component={Scratch} />
       <Redirect to="/games" />
     </Switch>

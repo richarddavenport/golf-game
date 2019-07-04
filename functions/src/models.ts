@@ -139,17 +139,17 @@ export interface Firestore {
 
 export interface Game {
     gameName: string;
+    gamePlayers: GamePlayer[];
     rules: Rules;
-    scoreboard: Scorecard[];
+    scoreboard: {
+        [uid: string]: Scorecard
+    },
     tourName: string;
     tournamentId: string;
     tournamentIsFinished: boolean;
     tournamentIsStarted: boolean;
     tournamentName: string;
     tournamentRoundState: string;
-    users: {
-        [key: string]: firebase.User
-    };
 }
 
 export interface Rules {
@@ -159,6 +159,10 @@ export interface Rules {
 
 export interface Scorecard {
     team: Player[];
-    uid: string;
     score: number;
+    user: firebase.User;
+}
+
+export interface GamePlayer extends Player {
+
 }

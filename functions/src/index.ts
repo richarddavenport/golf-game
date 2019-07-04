@@ -1,7 +1,8 @@
 import axios, { AxiosPromise } from 'axios';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { LeaderboardResponse, Player, Scorecard, Game, Leaderboard } from './models';
+import { LeaderboardResponse, Player, Game, Leaderboard } from './models';
+import { DocumentSnapshot } from '@google-cloud/firestore';
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
@@ -26,8 +27,34 @@ export const createUser = functions.runWith({ memory: '128MB' }).auth.user()
         });
     });
 
+const addTournamentInfoAndScoreboardToGame = (gameSnap: DocumentSnapshot, leaderboard: Leaderboard) => {
+    console.log('writing to: ', gameSnap.ref.path);
+    const { scoreboard } = gameSnap.data() as Game;
+    return gameSnap.ref.update({
+        tour: leaderboard.tour_name,
+        tournamentName: leaderboard.tournament_name,
+        tournamentIsFinished: leaderboard.is_finished,
+        tournamentIsStarted: leaderboard.is_started,
+        tournamentRoundState: leaderboard.round_state,
+        scoreboard: Object.keys(scoreboard).reduce((acc, uid) => {
+            const scorecard = scoreboard[uid];
+            const team = scorecard.team
+                .map(player => (leaderboard as Leaderboard).players.find(p => p.player_id === player.player_id))
+                .filter(Boolean);
+
+            return {
+                ...acc,
+                [uid]: {
+                    ...scorecard,
+                    score: (team as Player[]).reduce((acc: number, cur: Player) => acc + cur.total, 0),
+                    team
+                },
+            }
+        }, {}),
+    });
+}
+
 // TODO: change so that it fills in the scoreboard if the game is started
-// also run when a game is started
 export const updateGamesLeaderBoard = functions.firestore
     .document('tournaments/{tournamentId}')
     .onUpdate(async (change, context) => {
@@ -39,38 +66,23 @@ export const updateGamesLeaderBoard = functions.firestore
             .where('started', '==', true)
             .get();
         console.log('game siz: ', games.size)
-        games.forEach(async game => {
-            console.log('writing to: ', game.ref.path);
-            const data = game.data();
-            const scoreboard = (data as Game).scoreboard.map(scorecard => {
-                const team = scorecard.team.map(player => {
-                    return (leaderboard as Leaderboard).players.find(p => p.player_id === player.player_id)
-                }).filter(Boolean);
-
-                return {
-                    ...scorecard,
-                    score: (team as Player[]).reduce((acc: number, cur: Player) => acc + cur.total, 0),
-                    team
-                } as Scorecard;
-            });
-            await game.ref.update({
-                tour: leaderboard.tour_name,
-                tournamentName: leaderboard.tournament_name,
-                tournamentIsFinished: leaderboard.is_finished,
-                tournamentIsStarted: leaderboard.is_started,
-                tournamentRoundState: leaderboard.round_state,
-                scoreboard,
-            });
-        })
+        games.forEach(async game => await addTournamentInfoAndScoreboardToGame(game, leaderboard));
         console.log('done writing');
         return null;
     });
 
-// setup for picking players, need to fill in players
 export const onCreateGame = functions.firestore
     .document('games/{gameId}')
     .onCreate(async (change, context) => {
-        // TODO
-        // fill players based on rules
-        return null;
+        const { tournamentId } = change.data() || { tournamentId: null };
+        const leaderboardResponse = (await admin.firestore()
+            .doc(`tournaments/${tournamentId}`)
+            .get())
+            .data() as LeaderboardResponse;
+
+        await addTournamentInfoAndScoreboardToGame(change, leaderboardResponse.leaderboard);
+
+        return change.ref.update({
+            gamePlayers: leaderboardResponse.leaderboard.players,
+        } as Game)
     });

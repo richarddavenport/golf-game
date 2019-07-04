@@ -11,9 +11,9 @@ const Scoreboard: React.FunctionComponent<ScoreboardProps> = ({ game }) => {
   return (
     <>
       {sortBy(game.scoreboard, [s => s.score]).map((scorecard, i) => (
-        <div key={scorecard.uid}>
+        <div key={scorecard.user.uid}>
           <h1>
-            {i + 1} - {game.users[scorecard.uid].displayName} {scorecard.score}
+            {i + 1} - {scorecard.user.displayName} {scorecard.score}
           </h1>
           <TeamTable team={scorecard.team} />
         </div>

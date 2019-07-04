@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 // import { db } from '../../api/firebase';
-import withCollectionWithIds from '../withCollectionWithIds/withCollectionWithIds';
-import withUser from '../withUser/withUser';
+import withCollectionWithIds from '../../components/withCollectionWithIds/withCollectionWithIds';
+import withUser from '../../components/withUser/withUser';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { db } from '../../api/firebase';
 
-function AddGame({ collection: tournaments, user }) {
+function AddGame({ collection: tournaments, user, history }) {
   const [gameName, setGameName] = useState('');
   const [tournamentId, setTournamentId] = useState('');
   const [rules, setRules] = useState({
@@ -16,7 +17,7 @@ function AddGame({ collection: tournaments, user }) {
     top25once: false
   });
 
-  if (!tournaments || !user) return null;
+  if (!tournaments) return null;
 
   const handleGameName = event => setGameName(event.target.value);
   const handleTournamentId = event => setTournamentId(event.target.value);
@@ -25,17 +26,23 @@ function AddGame({ collection: tournaments, user }) {
   const handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-    const gameData = {
+
+    const game = {
       gameName,
       tournamentId,
       rules,
-      users: [user]
+      scoreboard: {
+        [user.uid]: {
+          score: 0,
+          team: [],
+          user: user.toJSON()
+        }
+      }
     };
-    console.log(gameData);
-    // db.collection('games')
-    //   .add()
-    //   .then(console.log)
-    //   .catch(console.error);
+    db.collection('games')
+      .add(game)
+      .then(ref => history.push(`/games/${ref.id}`))
+      .catch(console.error);
   };
 
   return (
@@ -51,14 +58,16 @@ function AddGame({ collection: tournaments, user }) {
           Tournament:
           <select style={{ maxWidth: 200 }} value={tournamentId} onChange={handleTournamentId}>
             <option value="" />
-            {tournaments.map(tournament => {
-              const { tour_name, tournament_name } = tournament.data.leaderboard;
-              return (
-                <option key={tournament.id} value={tournament.id}>
-                  {tour_name} - {tournament_name}
-                </option>
-              );
-            })}
+            {tournaments
+              .filter(tournament => !tournament.data.leaderboard.is_finished)
+              .map(tournament => {
+                const { tour_name, tournament_name } = tournament.data.leaderboard;
+                return (
+                  <option key={tournament.id} value={tournament.id}>
+                    {tour_name} - {tournament_name}
+                  </option>
+                );
+              })}
           </select>
         </label>
       </div>
@@ -88,7 +97,7 @@ function AddGame({ collection: tournaments, user }) {
         </FormGroup>
       </FormControl>
       <div>
-        <input type="submit" value="Submit" disabled={!gameName || !tournamentId || true} />
+        <input type="submit" value="Submit" disabled={!gameName || !tournamentId} />
       </div>
     </form>
   );

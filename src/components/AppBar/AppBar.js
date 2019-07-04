@@ -77,7 +77,7 @@ const AppBar = ({ user }) => {
         </div>
         <Divider />
         <List>
-          <ListItem button to="/new-game" component={Link} onClick={handleDrawerClose}>
+          <ListItem button to="/create-game" component={Link} onClick={handleDrawerClose}>
             <ListItemIcon>
               <GroupAdd />
             </ListItemIcon>

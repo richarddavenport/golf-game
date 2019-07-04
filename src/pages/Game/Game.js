@@ -13,7 +13,12 @@ function Game({ user, match }) {
     user && (
       <>
         <Link to={`/team/${gameId}`}>Join Game!</Link>
-        {game && <Scoreboard game={game} />}
+        {game && (
+          <>
+            <h1>{game.gameName}</h1>
+            <Scoreboard game={game} />
+          </>
+        )}
       </>
     )
   );

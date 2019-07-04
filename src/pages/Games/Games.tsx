@@ -17,23 +17,24 @@ const Games: React.FunctionComponent<GamesProps> = ({ collection: games, user })
     <>
       <h1>Current Games: </h1>
       {games.map(game => {
-        const { gameName, tournamentName, tournamentIsFinished, scoreboard, users } = game.data;
-        return tournamentIsFinished &&
-          <div key={game.id} style={{ marginBottom: 40 }}>
-            <Link to={`games/${game.id}`}>
-              <h3>
-                {gameName} - {tournamentName}
-              </h3>
-            </Link>
-            <p>Current Players</p>
-            <ul>
-              {scoreboard.map(scorecard => (
-                <li key={scorecard.uid}>{users[scorecard.uid].displayName}</li>
-              ))}
-            </ul>
-            {/* {!users.includes(user.uid) && <button onClick={onJoinGame}>Join Game</button>} */}
-            {/* TODO fix join game button */}
-          </div>
+        const { gameName, tournamentName, tournamentIsFinished, scoreboard } = game.data;
+        return (
+          tournamentIsFinished && (
+            <div key={game.id} style={{ marginBottom: 40 }}>
+              <Link to={`games/${game.id}`}>
+                <h3>
+                  {gameName} - {tournamentName}
+                </h3>
+              </Link>
+              <p>Current Players</p>
+              <ul>
+                {Object.entries(scoreboard).map(([uid, scorecard]) => (
+                  <li key={uid}>{scorecard.user.displayName}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        );
       })}
     </>
   );
