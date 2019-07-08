@@ -1,200 +1,12 @@
-import React from 'react';
-// import clsx from 'clsx';
-// import PropTypes from 'prop-types';
-import { /* lighten, */ makeStyles } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-// import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-// import Toolbar from '@material-ui/core/Toolbar';
-// import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-// import IconButton from '@material-ui/core/IconButton';
-// import Tooltip from '@material-ui/core/Tooltip';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Switch from '@material-ui/core/Switch';
-// import DeleteIcon from '@material-ui/icons/Delete';
-// import FilterListIcon from '@material-ui/icons/FilterList';
-import { GamePlayer } from '../../../functions/src/models';
-
-// function createData(name: any, calories: any, fat: any, carbs: any, protein: any) {
-//   return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Donut', 452, 25.0, 51, 4.9),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-//   createData('Honeycomb', 408, 3.2, 87, 6.5),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Jelly Bean', 375, 0.0, 94, 0.0),
-//   createData('KitKat', 518, 26.0, 65, 7.0),
-//   createData('Lollipop', 392, 0.2, 98, 0.0),
-//   createData('Marshmallow', 318, 0, 81, 2.0),
-//   createData('Nougat', 360, 19.0, 9, 37.0),
-//   createData('Oreo', 437, 18.0, 63, 4.0)
-// ];
-
-function desc(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array: any[], cmp: Function) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order: string, orderBy: string) {
-  return order === 'desc'
-    ? (a: any, b: any) => desc(a, b, orderBy)
-    : (a: any, b: any) => -desc(a, b, orderBy);
-}
-
-const headRows = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Player' }
-  // { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  // { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  // { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  // { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
-];
-
-function EnhancedTableHead(props: {
-  onSelectAllClick: any;
-  order: any;
-  orderBy: any;
-  numSelected: any;
-  rowCount: any;
-  onRequestSort: any;
-}) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: string) => (event: any) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          {/* <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'Select all desserts' }}
-          /> */}
-        </TableCell>
-        {headRows.map(row => (
-          <TableCell
-            key={row.id}
-            align={row.numeric ? 'right' : 'left'}
-            padding={row.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === row.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === row.id}
-              direction={order}
-              onClick={createSortHandler(row.id)}
-            >
-              {row.label}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-// EnhancedTableHead.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-//   onSelectAllClick: PropTypes.func.isRequired,
-//   order: PropTypes.string.isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired
-// };
-
-// const useToolbarStyles = makeStyles(theme => ({
-//   root: {
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(1)
-//   },
-//   highlight:
-//     theme.palette.type === 'light'
-//       ? {
-//           color: theme.palette.secondary.main,
-//           backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-//         }
-//       : {
-//           color: theme.palette.text.primary,
-//           backgroundColor: theme.palette.secondary.dark
-//         },
-//   spacer: {
-//     flex: '1 1 100%'
-//   },
-//   actions: {
-//     color: theme.palette.text.secondary
-//   },
-//   title: {
-//     flex: '0 0 auto'
-//   }
-// }));
-
-// const EnhancedTableToolbar = (props: { numSelected: any }) => {
-//   const classes = useToolbarStyles();
-//   const { numSelected } = props;
-
-//   return (
-//     <Toolbar
-//       className={clsx(classes.root, {
-//         [classes.highlight]: numSelected > 0
-//       })}
-//     >
-//       <div className={classes.title}>
-//         {numSelected > 0 ? (
-//           <Typography color="inherit" variant="subtitle1">
-//             {numSelected} selected
-//           </Typography>
-//         ) : (
-//           <Typography variant="h6" id="tableTitle">
-//             Nutrition
-//           </Typography>
-//         )}
-//       </div>
-//       <div className={classes.spacer} />
-//       <div className={classes.actions}>
-//         {numSelected > 0 ? (
-//           <Tooltip title="Delete">
-//             <IconButton aria-label="Delete">
-//               <DeleteIcon />
-//             </IconButton>
-//           </Tooltip>
-//         ) : (
-//           <Tooltip title="Filter list">
-//             <IconButton aria-label="Filter list">
-//               <FilterListIcon />
-//             </IconButton>
-//           </Tooltip>
-//         )}
-//       </div>
-//     </Toolbar>
-//   );
-// };
+import React from 'react';
+import { GamePlayer, GamePlayers } from '../../../functions/src/models';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -214,153 +26,75 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface PickTeamProps {
-  gamePlayers: GamePlayer[];
-  setPlayers: any;
+  gamePlayers: GamePlayers;
+  selectPlayer: (playerId: string, gamePlayer: GamePlayer) => void;
+  deselectPlayer: (playerId: string, gamePlayer: GamePlayer) => void;
+  uid: string;
 }
 
-const PickTeam: React.FunctionComponent<PickTeamProps> = ({ gamePlayers, setPlayers }) => {
+const PickTeam: React.FunctionComponent<PickTeamProps> = ({
+  gamePlayers,
+  selectPlayer,
+  deselectPlayer,
+  uid
+}) => {
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  // const [page, setPage] = React.useState(0);
-  // const [dense, setDense] = React.useState(false);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const numSelected = Object.entries(gamePlayers).reduce(
+    (acc, [_, { team }]) => acc + (team ? 1 : 0),
+    0
+  );
 
-  function handleRequestSort(event: any, property: React.SetStateAction<string>) {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
-    setOrderBy(property);
-  }
+  const onClick = (playerId: string, gamePlayer: GamePlayer) => (
+    event: React.MouseEvent<unknown>
+  ) => {
+    const onDifferentTeam = Boolean(gamePlayer.team) && gamePlayer.team !== uid;
+    const onTeam = gamePlayer.team === uid;
 
-  function handleSelectAllClick(event: { target: { checked: any } }) {
-    if (event.target.checked) {
-      const newSelecteds = gamePlayers.map(player => player.player_id);
-      // @ts-ignore
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }
+    if (onDifferentTeam) return;
 
-  function handleClick(event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, name: any) {
-    // @ts-ignore
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: any[] | never[] | ((prevState: never[]) => never[]) = [];
+    if (onTeam) return deselectPlayer(playerId, gamePlayer);
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    // @ts-ignore
-    setSelected(newSelected);
-    setPlayers(newSelected);
-  }
+    if (numSelected === 4) return;
 
-  // function handleChangePage(event: any, newPage: React.SetStateAction<number>) {
-  //   setPage(newPage);
-  // }
-
-  // function handleChangeRowsPerPage(event: { target: { value: string | number } }) {
-  //   setRowsPerPage(+event.target.value);
-  // }
-
-  // function handleChangeDense(event: { target: { checked: React.SetStateAction<boolean> } }) {
-  //   setDense(event.target.checked);
-  // }
-  // @ts-ignore
-  const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
-  // const emptyRows = rowsPerPage - Math.min(rowsPerPage, players.length - page * rowsPerPage);
+    selectPlayer(playerId, gamePlayer);
+  };
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'}>
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={gamePlayers.length}
-            />
             <TableBody>
-              {stableSort(gamePlayers, getSorting(order, orderBy))
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: GamePlayer, index) => {
-                  const isItemSelected = isSelected(row.player_id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              {Object.entries(gamePlayers).map(([playerId, gamePlayer]) => {
+                const playerIsSelected = Boolean(gamePlayer.team);
+                const onDifferentTeam = playerIsSelected && gamePlayer.team !== uid;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event =>
-                        selected.length < 4 || (selected.length === 4 && isItemSelected)
-                          ? handleClick(event, row.player_id)
-                          : () => {}
-                      }
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.player_id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                          disabled={selected.length > 3}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.player_bio.last_name}, {row.player_bio.first_name}
-                      </TableCell>
-                      {/* <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell> */}
-                    </TableRow>
-                  );
-                })}
-              {/* {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
+                return (
+                  <TableRow
+                    hover
+                    onClick={onClick(playerId, gamePlayer)}
+                    role="checkbox"
+                    aria-checked={playerIsSelected}
+                    tabIndex={-1}
+                    key={gamePlayer.player_id}
+                    selected={playerIsSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={playerIsSelected}
+                        disabled={(onDifferentTeam && playerIsSelected) || numSelected === 4}
+                      />
+                    </TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {gamePlayer.player_bio.last_name}, {gamePlayer.player_bio.first_name}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
-        {/* <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={players.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page'
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page'
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        /> */}
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </div>
   );
 };

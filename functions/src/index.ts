@@ -1,8 +1,8 @@
+import { DocumentSnapshot } from '@google-cloud/firestore';
 import axios, { AxiosPromise } from 'axios';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { LeaderboardResponse, Player, Game, Leaderboard } from './models';
-import { DocumentSnapshot } from '@google-cloud/firestore';
+import { Game, Leaderboard, LeaderboardResponse, Team } from './models';
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
@@ -36,17 +36,21 @@ const addTournamentInfoAndScoreboardToGame = (gameSnap: DocumentSnapshot, leader
         tournamentIsFinished: leaderboard.is_finished,
         tournamentIsStarted: leaderboard.is_started,
         tournamentRoundState: leaderboard.round_state,
-        scoreboard: Object.keys(scoreboard).reduce((acc, uid) => {
-            const scorecard = scoreboard[uid];
-            const team = scorecard.team
-                .map(player => (leaderboard as Leaderboard).players.find(p => p.player_id === player.player_id))
-                .filter(Boolean);
+        scoreboard: Object.entries(scoreboard).reduce((acc, [uid, scorecard]) => {
+            const team = Object.entries(scorecard.team)
+                .reduce((acc, [uid, player]) => ({
+                    ...acc,
+                    [uid]: {
+                        ...scorecard.team[uid],
+                        ...leaderboard.players.find(p => p.player_id === player.player_id),
+                    }
+                }), {}) as Team;
 
             return {
                 ...acc,
                 [uid]: {
                     ...scorecard,
-                    score: (team as Player[]).reduce((acc: number, cur: Player) => acc + cur.total, 0),
+                    score: Object.entries(team).reduce((acc: number, [uid, player]) => acc + player.total, 0),
                     team
                 },
             }
@@ -82,7 +86,10 @@ export const onCreateGame = functions.firestore
 
         await addTournamentInfoAndScoreboardToGame(change, leaderboardResponse.leaderboard);
 
-        return change.ref.update({
-            gamePlayers: leaderboardResponse.leaderboard.players,
-        } as Game)
+        const gamePlayers = leaderboardResponse.leaderboard.players.reduce((acc, cur) => ({
+            ...acc,
+            [cur.player_id]: cur
+        }), {});
+
+        return change.ref.update('gamePlayers', gamePlayers);
     });

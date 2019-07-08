@@ -10,7 +10,7 @@ interface GamesProps {
   user: firebase.User;
 }
 
-const Games: React.FunctionComponent<GamesProps> = ({ collection: games, user }) => {
+const Games: React.FC<GamesProps> = ({ collection: games, user }) => {
   if (!games || !user) return null;
 
   return (
@@ -19,7 +19,7 @@ const Games: React.FunctionComponent<GamesProps> = ({ collection: games, user })
       {games.map(game => {
         const { gameName, tournamentName, tournamentIsFinished, scoreboard } = game.data;
         return (
-          tournamentIsFinished && (
+          !tournamentIsFinished && (
             <div key={game.id} style={{ marginBottom: 40 }}>
               <Link to={`games/${game.id}`}>
                 <h3>

@@ -12,8 +12,8 @@ const TeamTable = ({ team }) => (
       </tr>
     </thead>
     <tbody>
-      {team.map(player => (
-        <tr key={player.player_id}>
+      {Object.entries(team).map(([playerId, player]) => (
+        <tr key={playerId}>
           <td>
             {player.player_bio.first_name} {player.player_bio.last_name}
           </td>
